@@ -1,6 +1,6 @@
 Introduction to Ruby and Web Development
 ===
-###OOP Blackjack Web App
+###Blackjack Web App
 
 This is from Lesson 3 in the [Tealeaf Academy](http://www.gotealeaf.com/)'s Introduction to Ruby and Web Development course.
 
