@@ -5,23 +5,20 @@
     <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/application.css">
   </head>
-  <body style="padding-top: 50px;">
-
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-            <ul class="nav">
-              <li><a href="/">Nav Item</a></li>
-            </ul>
+  <body style="padding-top: 20px;">
+    <div class="container">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <a class="brand" href="/">Blackjack!</a>
+          <ul class="nav">
+            <li><a href="#">New Game</a></li>
+          </ul>
         </div>
       </div>
-    </div>
-
-  <div class="container">
-    <%if @error %>
-      <div class="alert alert-error"><%=@error%></div>
-    <% end %>
+      <%if @error %>
+        <div class="alert alert-error"><%=@error%></div>
+      <% end %>
       <%= yield %>
-  </div>
+    </div>
   </body>
 </html>
