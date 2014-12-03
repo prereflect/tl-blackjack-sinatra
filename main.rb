@@ -12,6 +12,7 @@ end
 
 post '/getname' do
   session[:username] = params[:username]
+  session[:cash] = 500
   redirect '/bet'
 end
 

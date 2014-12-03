@@ -1,4 +1,5 @@
-<p>Hi <%= session[:username] %>, How much do you want to bet?</p>
+<p>Welcome <%= session[:username] %>!</p>
+<p>You have $<%= session[:cash] %> How much do you want to bet?</p>
 <form action='/makebet' method='post'class="navbar-form pull-left">
   <p><input type="text" class="span3" name="bet"></p>
   <p><button type="submit" class="btn">Bet!</button></p>
