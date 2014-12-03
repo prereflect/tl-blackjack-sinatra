@@ -2,6 +2,15 @@ require 'sinatra'
 
 set :sessions, true
 
+helpers do
+  def link(name)
+    case name
+    when :form then '/form'
+    when :cat then '/cat'
+    end
+  end
+end
+
 get '/' do
   erb :index
 end
