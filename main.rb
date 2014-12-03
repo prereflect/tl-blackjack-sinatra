@@ -10,6 +10,10 @@ get '/form' do
   erb :form
 end
 
+get '/cat' do
+  erb :cat
+end
+
 post '/getname' do
   session[:username] = params[:username]
   session[:cash] = 500
