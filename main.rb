@@ -1,6 +1,9 @@
 require 'sinatra'
 
-set :sessions, true
+use Rack::Session::Cookie, :key => 'rack.session',
+                           :path => '/',
+                           :expire_after => 2592000, # In seconds
+                           :secret => 'Sj4R#CnTeUOFGQX%XK'
 
 helpers do
   def link(name)
@@ -25,12 +28,14 @@ end
 
 post '/getname' do
   session[:username] = params[:username]
-  session[:cash] = 500
   redirect '/bet'
 end
 
-get '/bet' do
+post '/bet' do
+  session[:cash] = 500
+  session[:username] = params[:username]
   erb :bet
+  redirect '/game'
 end
 
 get '/game' do
