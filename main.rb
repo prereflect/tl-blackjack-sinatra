@@ -46,14 +46,6 @@ helpers do
     
     total
   end
-
-  def link(name)
-    case name
-    when :name then '/name'
-    when :cat then '/cat'
-    when :new_game then '/new_game'
-    end
-  end
 end
 
 get '/' do
