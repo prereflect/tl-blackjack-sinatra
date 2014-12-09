@@ -10,7 +10,7 @@ use Rack::Session::Cookie, :key => 'rack.session',
 
 helpers do
   def new_player
-    session[:player_name] = 'Anon'
+    session[:player_name] = ''
     session[:player_cash] = 500
     session[:player_hand] = []
     session[:player_bet] = []
@@ -51,6 +51,7 @@ helpers do
     case name
     when :name then '/name'
     when :cat then '/cat'
+    when :new_game then '/new_game'
     end
   end
 end
@@ -86,10 +87,18 @@ get '/game' do
   new_deck
   session[:dealer_hand] = []
 
-  deal(session[:player_hand])
-  deal(session[:dealer_hand])
-  deal(session[:player_hand])
-  deal(session[:dealer_hand])
+  2.times do
+    deal(session[:player_hand])
+    deal(session[:dealer_hand])
+  end
 
   erb :game
+end
+
+get '/new_game' do
+  new_deck
+  session[:player_cash] = 500
+  session[:player_hand] = []
+  session[:player_bet] = []
+  redirect '/bet'
 end

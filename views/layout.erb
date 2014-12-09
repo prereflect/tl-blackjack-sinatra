@@ -10,9 +10,11 @@
       <div class="navbar">
         <div class="navbar-inner">
           <a class="brand" href="/">Blackjack!</a>
-          <ul class="nav">
-            <li><a href="#">New Game</a></li>
-          </ul>
+          <% if session[:player_name] %>
+            <ul class="nav">
+              <li><a href=<%= link :new_game %>>New Game</a></li>
+            </ul>
+          <% end %>
         </div>
       </div>
       <%if @error %>

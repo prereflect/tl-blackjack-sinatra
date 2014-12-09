@@ -1,4 +1,5 @@
 *.swp
 itp3.sh
 log/
+tmp/
 
