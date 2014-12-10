@@ -1,3 +1,12 @@
-<p><%= session[:player_name] %>'s cards: <%= session[:player_hand] %> total: <%= calculate_total(session[:player_hand]) %></p>
-<p>Dealer's cards: <%= session[:dealer_hand] %> total: <%= calculate_total(session[:dealer_hand]) %></p>
+<p><%= 
+  session[:player_name] %>'s 
+  cards: <%= session[:player_hand] %> 
+  total: <%= calculate_total(session[:player_hand]) %>
+</p>
+<p>Dealer's cards: 
+  <%= session[:dealer_hand] %> 
+  total: <%= calculate_total(session[:dealer_hand]) %>
+</p>
+
+<%= erb :player_hit %>
 
