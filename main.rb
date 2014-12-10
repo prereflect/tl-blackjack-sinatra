@@ -80,7 +80,7 @@ post '/post_bet' do
   redirect '/game'
 end
 
-get '/player/hit' do
+post '/player/hit' do
   deal(session[:player_hand])
   redirect '/game'
 end
