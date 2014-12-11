@@ -1,12 +1,17 @@
-<p><%= 
-  session[:player_name] %>'s 
-  cards: <%= session[:player_hand] %> 
+<h3>Dealer's cards: </h3>
+
+<% session[:dealer_hand].each do |card| %>
+  <%= generate_pic_url(card) %>
+<% end %>
+
+<h3>
+  <%= session[:player_name] %>'s 
   total: <%= calculate_total(session[:player_hand]) %>
-</p>
-<p>Dealer's cards: 
-  <%= session[:dealer_hand] %> 
-  total: <%= calculate_total(session[:dealer_hand]) %>
-</p>
+</h3>
+
+<% session[:player_hand].each do |card| %>
+  <%= generate_pic_url(card) %>
+<% end %>
 
 <%= erb :player_hit %>
 
