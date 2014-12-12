@@ -1,7 +1,7 @@
 <% if session[:player_name]
      redirect '/bet'
    else %>
-     <p>What's your name?</p>
+     <h4>What's your name?</h4>
      <form action='/post_name' method='post'class="navbar-form pull-left">
        <p><input type="text" class="span3" name="player_name"></p>
        <p><button type="submit" class="btn">Submit</button></p>

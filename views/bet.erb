@@ -1,5 +1,5 @@
-<p><%= session[:player_name] %>, you have $<%= session[:player_cash] %></p>
-<p>How much do you want to bet?</p>
+<h4><%= session[:player_name] %>, you have $<%= session[:player_cash] %></h4>
+<h5>How much do you want to bet?</h5>
 <form action='/post_bet' method='post'class="navbar-form pull-left">
   <p><input type="text" class="span3" name="player_bet"></p>
   <p><button type="submit" class="btn">Bet!</button></p>
