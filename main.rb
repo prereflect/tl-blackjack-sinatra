@@ -13,6 +13,7 @@ helpers do
     session[:player_cash] = 500
     session[:player_hand] = []
     session[:player_bet] = ''
+    session[:player_turn] = true
   end
 
   def new_deck
@@ -54,7 +55,7 @@ helpers do
 
     values.select{|element| element == 'ace'}.count.times do
       break if total <= 21
-      total -= 10
+      total -= 11
     end
     
     total
@@ -96,6 +97,11 @@ end
 
 post '/player/hit' do
   deal(session[:player_hand])
+  redirect '/game'
+end
+
+get '/player/stay' do
+  session[:player_turn] = false
   redirect '/game'
 end
 
