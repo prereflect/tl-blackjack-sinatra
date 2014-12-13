@@ -45,14 +45,14 @@ helpers do
 
     total = 0
     values.each do |val|
-      if val == 'A'
+      if val == 'ace'
         total += 11
       else
         total += val.to_i == 0 ? 10 : val.to_i
       end
     end
 
-    values.select{|element| element == 'A'}.count.times do
+    values.select{|element| element == 'ace'}.count.times do
       break if total <= 21
       total -= 10
     end

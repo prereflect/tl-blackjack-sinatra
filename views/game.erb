@@ -1,15 +1,20 @@
-<h4>Dealer's cards</h4>
+<h4>
+ Dealer's cards                                               <i class="icon-leaf"></i> <i class="icon-leaf"></i> <i class="icon-leaf"></i>
+</h4>
 
 <img src=/images/cards/cover.png />
 <% session[:dealer_hand].drop(1).each do |card| %>
   <%= generate_pic_url(card) %>
 <% end %>
 
-<h4><%= session[:player_name] %>'s Cards</h4>
+<h4>
+  Toby's cards                                                <i class="icon-leaf"></i> <i class="icon-leaf"></i> <i class="icon-leaf"></i>
+  <%= erb :player_hit %>                                      <i class="icon-leaf"></i> <i class="icon-leaf"></i> <i class="icon-leaf"></i>
+  Bet: $<%= session[:player_bet] %>                           <i class="icon-leaf"></i> <i class="icon-leaf"></i> <i class="icon-leaf"></i>
+  Total points: <%= calculate_total(session[:player_hand]) %> <i class="icon-leaf"></i> <i class="icon-leaf"></i> <i class="icon-leaf"></i>
+</h4>
 
 <% session[:player_hand].each do |card| %>
   <%= generate_pic_url(card) %>
 <% end %>
 
-<h4>bet: $<%= session[:player_bet] %> total points: <%= calculate_total(session[:player_hand]) %></h4>
-<%= erb :player_hit %>
