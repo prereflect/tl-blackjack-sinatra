@@ -5,9 +5,10 @@
 <% end %>
 
 <h4>
-  Toby's cards                      <i class="icon-leaf"></i> <i class="icon-leaf"></i> <i class="icon-leaf"></i>
-  Bet: $<%= session[:player_bet] %> <i class="icon-leaf"></i> <i class="icon-leaf"></i> <i class="icon-leaf"></i>
-  Total points: <%= calculate_total(session[:player_hand]) %> 
+  Toby's cards                                                <span>&cir;</span>
+  Total points: <%= calculate_total(session[:player_hand]) %> <span>&cir;</span>
+  Bet: $<%= session[:player_bet] %>                           <span>&cir;</span>
+  Cash: $<%= session[:player_cash] %>
 </h4>
 
 <% session[:player_hand].each do |card| %>

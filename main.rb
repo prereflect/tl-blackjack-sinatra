@@ -55,7 +55,7 @@ helpers do
 
     values.select{|element| element == 'ace'}.count.times do
       break if total <= 21
-      total -= 11
+      total -= 10
     end
     
     total
@@ -92,17 +92,51 @@ end
 
 post '/post_bet' do
   session[:player_bet] = params[:player_bet].to_i
-  redirect '/game'
+  redirect '/blackjack'
 end
+
+get '/blackjack' do
+  if calculate_total(session[:player_hand]) == BLACKJACK || calculate_total(session[:dealer_hand]) == BLACKJACK
+    redirect '/has/blackjack'
+  else
+    redirect '/busted'
+  end
+end
+
+get '/busted' do
+  if calculate_total(session[:player_hand]) > BLACKJACK || calculate_total(session[:dealer_hand]) > BLACKJACK
+    redirect '/is/busted'
+  else
+    redirect '/game'
+  end
+end
+
 
 post '/player/hit' do
   deal(session[:player_hand])
-  redirect '/game'
+  redirect '/blackjack'
 end
 
 get '/player/stay' do
   session[:player_turn] = false
-  redirect '/game'
+  redirect '/dealer/hit'
+end
+
+get '/dealer/hit' do
+  if calculate_total(session[:dealer_hand]) < DEALER_STAY
+    deal(session[:dealer_hand])
+    redirect '/dealer/hit'
+  else
+    redirect '/blackjack'
+  end
+end
+
+get '/has/blackjack' do
+  erb :blackjack
+end
+
+get '/is/busted' do
+  erb :busted
 end
 
 get '/game' do
