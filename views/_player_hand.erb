@@ -4,9 +4,9 @@
     <span>
     <%= erb :_hit_stay_buttons %>
     </span>
-    Total points <%= calculate_total(session[:player_hand]) %>
+    Total points: <%= calculate_total(session[:player_hand]) %>
   <% else %>
-    <span>&cir;</span>Total points <%= calculate_total(session[:player_hand]) %>
+    <span>&cir;</span>Total points: <%= calculate_total(session[:player_hand]) %>
   <% end %>
 </h4>
 
