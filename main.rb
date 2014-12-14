@@ -97,7 +97,15 @@ end
 
 get '/blackjack' do
   if calculate_total(session[:player_hand]) == BLACKJACK || calculate_total(session[:dealer_hand]) == BLACKJACK
-    redirect '/has/blackjack'
+    case
+    when calculate_total(session[:player_hand]) == BLACKJACK
+      session[:player_turn] = false
+      @success = "Blackjack! You win!"
+    when calculate_total(session[:dealer_hand]) == BLACKJACK
+      session[:player_turn] = false
+      @error = "Dealer hits Blackjack. You lose."
+    end
+    erb :blackjack
   else
     redirect '/busted'
   end
@@ -105,12 +113,19 @@ end
 
 get '/busted' do
   if calculate_total(session[:player_hand]) > BLACKJACK || calculate_total(session[:dealer_hand]) > BLACKJACK
-    redirect '/is/busted'
+    case
+    when calculate_total(session[:player_hand]) > BLACKJACK
+      session[:player_turn] = false
+      @error = "Sorry, you busted!"
+    when calculate_total(session[:dealer_hand]) > BLACKJACK
+      session[:player_turn] = false
+      @success = "Dealer Busts. You win!"
+    end
+    erb :busted
   else
     redirect '/game'
   end
 end
-
 
 post '/player/hit' do
   deal(session[:player_hand])
@@ -118,6 +133,7 @@ post '/player/hit' do
 end
 
 get '/player/stay' do
+  @success = "You have chosen to stay."
   session[:player_turn] = false
   redirect '/dealer/hit'
 end

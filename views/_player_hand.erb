@@ -1,10 +1,8 @@
 <h4>
   Toby's cards
   <% if session[:player_turn] %>
-    <span>
-    <%= erb :_hit_stay_buttons %>
-    </span>
-    Total points: <%= calculate_total(session[:player_hand]) %>
+    <span>&cir;</span>Total points: <%= calculate_total(session[:player_hand]) %>
+    <span> <%= erb :_hit_stay_buttons %></span>
   <% else %>
     <span>&cir;</span>Total points: <%= calculate_total(session[:player_hand]) %>
   <% end %>
