@@ -1,17 +1,2 @@
-<h4>
-Dealer's cards                                                   <span>&cir;</span>
-  Total points: <%= calculate_total(session[:dealer_hand]) %>
-</h4>
-<% session[:dealer_hand].each do |card| %>
-  <%= generate_pic_url(card) %>
-<% end %>
-
-<h4>
-  <%= session[:player_name] %>'s cards                           <span>&cir;</span>
-  Total points: <%= calculate_total(session[:player_hand]) %>    <span>&cir;</span>
-  Bet: $<%= session[:player_bet] %>                              <span>&cir;</span>
-  Cash $<%= session[:player_cash] %>                             <span>&cir;</span>
-</h4>
-<% session[:player_hand].each do |card| %>
-  <%= generate_pic_url(card) %>
-<% end %>
+<%= erb :_dealer_hand %>
+<%= erb :_player_hand %>
