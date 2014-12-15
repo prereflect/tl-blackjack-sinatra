@@ -61,6 +61,14 @@ helpers do
     
     total
   end
+
+  def random_suit
+    suits = ["&clubs;", "&diams;", "&hearts;", "&spades;"]
+    a_suit = suits.sample
+    a_suit
+  end
+
+
 end
 
 get '/' do
