@@ -3,4 +3,6 @@ body {
   color: rgb(255, 255, 255);
 }
 
-span { padding: 20px; }
+span.pad20px { padding: 20px; }
+span.add-on { color: rgb(0,0,0) }
+
