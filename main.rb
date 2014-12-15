@@ -100,10 +100,10 @@ get '/blackjack' do
     case
     when calculate_total(session[:player_hand]) == BLACKJACK
       session[:player_turn] = false
-      @success = "Blackjack! You win!"
+      @green = "<strong>Blackjack!</strong> You win!"
     when calculate_total(session[:dealer_hand]) == BLACKJACK
       session[:player_turn] = false
-      @error = "Dealer hits Blackjack. You lose."
+      @red = "<strong>Dealer hits Blackjack</strong> You lose."
     end
     erb :blackjack
   else
@@ -116,12 +116,29 @@ get '/busted' do
     case
     when calculate_total(session[:player_hand]) > BLACKJACK
       session[:player_turn] = false
-      @error = "Sorry, you busted!"
+      # session[:player_cash] -= session[:player_bet]
+      @red = "<strong>You busted!</strong> Dealer wins"
     when calculate_total(session[:dealer_hand]) > BLACKJACK
       session[:player_turn] = false
-      @success = "Dealer Busts. You win!"
+      @green = "<strong>Dealer Busts</strong> You win!"
     end
     erb :busted
+  else
+    redirect '/game/over'
+  end
+end
+
+get '/game/over' do
+  if session[:player_turn] == false
+    case
+    when calculate_total(session[:player_hand]) > calculate_total(session[:dealer_hand])
+      @green = "<strong>You win</strong> this hand!"
+    when calculate_total(session[:player_hand]) < calculate_total(session[:dealer_hand])
+      @red = "<strong>Dealer wins</strong> this hand."
+    when calculate_total(session[:player_hand]) == calculate_total(session[:dealer_hand])
+      @blue = "<strong>It's a Push</strong> You and the Dealer have the same score."
+    end
+    erb :over
   else
     redirect '/game'
   end
@@ -133,7 +150,6 @@ post '/player/hit' do
 end
 
 get '/player/stay' do
-  @success = "You have chosen to stay."
   session[:player_turn] = false
   redirect '/dealer/hit'
 end
