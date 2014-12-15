@@ -41,7 +41,7 @@ helpers do
   def deal(hand)
     hand << session[:deck].pop
   end
-  
+
   def calculate_total(hand)
     values = hand.map { |element| element[0] }
 
@@ -67,7 +67,6 @@ helpers do
     a_suit = suits.sample
     a_suit
   end
-
 
 end
 
@@ -101,7 +100,12 @@ end
 
 post '/post_bet' do
   session[:player_bet] = params[:player_bet].to_i
-  redirect '/blackjack'
+  if session[:player_bet] > 0 && session[:player_bet] <= session[:player_cash]
+    redirect '/blackjack'
+  else
+    @red = "<strong>Invalid input</strong>"
+    erb :bet
+  end
 end
 
 get '/blackjack' do
