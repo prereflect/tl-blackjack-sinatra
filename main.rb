@@ -78,7 +78,7 @@ get '/name' do
   erb :name
 end
 
-post '/post_name' do
+post '/name' do
   session[:player_name] = params[:player_name]
 
   if session[:player_name] == ''
@@ -114,7 +114,7 @@ get '/bet' do
   erb :bet
 end
 
-post '/post_bet' do
+post '/bet' do
   session[:player_bet] = params[:player_bet].to_i
   if session[:player_bet] > 0 && session[:player_bet] <= session[:player_cash]
 
