@@ -11,6 +11,12 @@
       <div class="navbar-inner">
         <div class="container">
           <a class="brand" href="/">Sinatra Shouts Blackjack!</a>
+          <% if @gameover  %>
+            <ul class="nav">
+              <li><a href="/new_game">New Game</a></li>
+              <li><a href="/about">About</a></li>
+            </ul>
+          <% end %>
         </div>
       </div>
     </div>

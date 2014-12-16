@@ -4,5 +4,4 @@ body {
 }
 
 span.pad20px { padding: 20px; }
-span.add-on { color: rgb(0,0,0) }
-
+div.well, span.add-on { color: rgb(0,0,0) }

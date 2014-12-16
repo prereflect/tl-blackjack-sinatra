@@ -69,21 +69,30 @@ end
 
 post '/post_name' do
   session[:player_name] = params[:player_name]
-  redirect '/new_game'
+  if session[:player_name] == ''
+    @red = "<strong>Please</strong> enter a name."
+    erb :name
+  else
+    redirect '/new_game'
+  end
 end
 
 get '/new_game' do
-  session[:player_turn] = true
-  session[:player_hand] = []
-  session[:player_cash] = 500
-  session[:player_bet] = ''
-  session[:dealer_hand] = []
-  new_deck
-  2.times do
-    deal(session[:player_hand])
-    deal(session[:dealer_hand])
+  if session[:player_name]
+    session[:player_turn] = true
+    session[:player_hand] = []
+    session[:player_cash] = 500
+    session[:player_bet] = ''
+    session[:dealer_hand] = []
+    new_deck
+    2.times do
+      deal(session[:player_hand])
+      deal(session[:dealer_hand])
+    end
+    redirect '/bet'
+  else
+    redirect '/name'
   end
-  redirect '/bet'
 end
 
 get '/bet' do
@@ -131,12 +140,18 @@ get '/busted' do
       session[:player_turn] = false
       session[:player_cash] -= session[:player_bet]
       @red = "<strong>You busted!</strong> Dealer wins"
+      if session[:player_cash] == 0                               # <===== This for blackjack, etc.
+        @gameover = true
+        erb :poorhouse
+      else
+        erb :busted
+      end
     when calculate_total(session[:dealer_hand]) > BLACKJACK
       session[:player_turn] = false
       session[:player_cash] += session[:player_bet]
       @green = "<strong>Dealer Busts</strong> You win!"
+      erb :busted
     end
-    erb :busted
   else
     redirect '/hand/over'
   end
@@ -195,6 +210,21 @@ post '/new_hand' do
     deal(session[:dealer_hand])
   end
   redirect '/bet'
+end
+
+get '/about' do
+  @gameover = true
+  erb :about
+end
+
+post '/vegas' do
+  @gameover = true
+  erb :vegas
+end
+
+get '/poorhouse' do
+  @gameover = true
+  erb :poorhouse
 end
 
 get '/cat' do
