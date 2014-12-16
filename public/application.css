@@ -4,7 +4,7 @@ body {
 }
 
 span.pad20px { padding: 20px; }
-div.well, span.add-on { color: rgb(0,0,0) }
+div.well, span.add-on { color: rgb(80,80,80) }
 
 .img-polaroid {
   padding: 4px;
