@@ -4,7 +4,8 @@
   <%= generate_pic_url(session[:dealer_hand][1]) %>
 <% else %>
   <h4>
-    Dealer's cards <span><%= random_suit %></span>
+    Dealer's cards 
+    <span class="pad20px"><%= random_suit %></span>
     Total: <%= calculate_total(session[:dealer_hand]) %>
   </h4>
   <% session[:dealer_hand].each do |card| %>
