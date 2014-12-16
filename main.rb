@@ -9,18 +9,10 @@ BLACKJACK = 21
 DEALER_STAY = 17
 
 helpers do
-  def player
-    session[:player_cash] = 500
-    session[:player_hand] = []
-    session[:player_bet] = ''
-    session[:player_turn] = true
-  end
-
   def new_deck
     session[:deck] = [
       2, 3, 4, 5, 6, 7, 8, 9, 10, 'jack', 'queen', 'king', 'ace'].product(
       ['C', 'D', 'H', 'S'])
-
     session[:deck].shuffle!
   end
 
@@ -44,7 +36,6 @@ helpers do
 
   def calculate_total(hand)
     values = hand.map { |element| element[0] }
-
     total = 0
     values.each do |val|
       if val == 'ace'
@@ -53,12 +44,10 @@ helpers do
         total += val.to_i == 0 ? 10 : val.to_i
       end
     end
-
     values.select{|element| element == 'ace'}.count.times do
       break if total <= 21
       total -= 10
     end
-    
     total
   end
 
@@ -74,23 +63,26 @@ get '/' do
   erb :index
 end
 
-get '/new_game' do
-  new_deck
-  player
-  session[:dealer_hand] = []
-  2.times do
-    deal(session[:player_hand])
-    deal(session[:dealer_hand])
-  end
-  redirect '/name'
-end
-
 get '/name' do
   erb :name
 end
 
 post '/post_name' do
   session[:player_name] = params[:player_name]
+  redirect '/new_game'
+end
+
+get '/new_game' do
+  session[:player_turn] = true
+  session[:player_hand] = []
+  session[:player_cash] = 500
+  session[:player_bet] = ''
+  session[:dealer_hand] = []
+  new_deck
+  2.times do
+    deal(session[:player_hand])
+    deal(session[:dealer_hand])
+  end
   redirect '/bet'
 end
 
@@ -111,28 +103,22 @@ end
 get '/blackjack' do
   if calculate_total(session[:player_hand]) == BLACKJACK ||
     calculate_total(session[:dealer_hand]) == BLACKJACK
-
     case
     when calculate_total(session[:player_hand]) == BLACKJACK &&
       calculate_total(session[:dealer_hand]) == BLACKJACK
-
       session[:player_turn] = false
       @blue = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
-
     when calculate_total(session[:player_hand]) == BLACKJACK
-
       session[:player_turn] = false
+      session[:player_cash] += session[:player_bet]
       @green = "<strong>Blackjack!</strong> You win!"
-
     when calculate_total(session[:dealer_hand]) == BLACKJACK
-
       session[:player_turn] = false
+      session[:player_cash] -= session[:player_bet]
       @red = "<strong>Dealer hits Blackjack</strong> You lose."
     end
     erb :blackjack
-
   else
-
     redirect '/busted'
   end
 end
@@ -140,50 +126,39 @@ end
 get '/busted' do
   if calculate_total(session[:player_hand]) > BLACKJACK ||
     calculate_total(session[:dealer_hand]) > BLACKJACK
-
     case
     when calculate_total(session[:player_hand]) > BLACKJACK
-
       session[:player_turn] = false
-      # session[:player_cash] -= session[:player_bet]
+      session[:player_cash] -= session[:player_bet]
       @red = "<strong>You busted!</strong> Dealer wins"
-
     when calculate_total(session[:dealer_hand]) > BLACKJACK
-
       session[:player_turn] = false
+      session[:player_cash] += session[:player_bet]
       @green = "<strong>Dealer Busts</strong> You win!"
     end
-
     erb :busted
   else
-
-    redirect '/game/over'
+    redirect '/hand/over'
   end
 end
 
-get '/game/over' do
+get '/hand/over' do
   if session[:player_turn] == false
-
     case
     when calculate_total(session[:player_hand]) >
       calculate_total(session[:dealer_hand])
-
+      session[:player_cash] += session[:player_bet]
       @green = "<strong>You win</strong> this hand!"
-
     when calculate_total(session[:player_hand]) <
       calculate_total(session[:dealer_hand])
-
+      session[:player_cash] -= session[:player_bet]
       @red = "<strong>Dealer wins</strong> this hand."
-
     when calculate_total(session[:player_hand]) ==
       calculate_total(session[:dealer_hand])
-
       @blue = "<strong>It's a Push</strong> You and the Dealer have the same score."
     end
-
     erb :over
   else
-
     redirect '/game'
   end
 end
@@ -209,6 +184,17 @@ end
 
 get '/game' do
   erb :game
+end
+
+post '/new_hand' do
+  session[:player_turn] = true
+  session[:player_hand] = []
+  session[:dealer_hand] = []
+  2.times do
+    deal(session[:player_hand])
+    deal(session[:dealer_hand])
+  end
+  redirect '/bet'
 end
 
 get '/cat' do

@@ -5,6 +5,7 @@
     <span> <%= erb :_hit_stay_buttons %></span>
   <% else %>
     <span><%= random_suit %></span>Total: <%= calculate_total(session[:player_hand]) %>
+    <span> <%= erb :_new_hand_done_buttons %></span>
   <% end %>
 </h4>
 
