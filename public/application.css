@@ -5,3 +5,13 @@ body {
 
 span.pad20px { padding: 20px; }
 div.well, span.add-on { color: rgb(0,0,0) }
+
+.img-polaroid {
+  padding: 4px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.7);
+  -webkit-box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.7);
+  box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.7);
+}

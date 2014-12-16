@@ -13,6 +13,7 @@ helpers do
     session[:deck] = [
       2, 3, 4, 5, 6, 7, 8, 9, 10, 'jack', 'queen', 'king', 'ace'].product(
       ['C', 'D', 'H', 'S'])
+
     session[:deck].shuffle!
   end
 
@@ -27,6 +28,7 @@ helpers do
                when 'S'
                  'spades_' + card[0].to_s + '.png'
                end
+
     pic_url = "<img src=/images/cards/#{ pic_name } class='card_pic'>"
   end
   
@@ -36,7 +38,9 @@ helpers do
 
   def calculate_total(hand)
     values = hand.map { |element| element[0] }
+
     total = 0
+
     values.each do |val|
       if val == 'ace'
         total += 11
@@ -44,10 +48,12 @@ helpers do
         total += val.to_i == 0 ? 10 : val.to_i
       end
     end
+
     values.select{|element| element == 'ace'}.count.times do
       break if total <= 21
       total -= 10
     end
+
     total
   end
 
@@ -60,7 +66,11 @@ helpers do
 end
 
 get '/' do
-  erb :index
+  if session[:player_name]
+    erb :bet
+  else
+    erb :index
+  end
 end
 
 get '/name' do
@@ -69,8 +79,10 @@ end
 
 post '/post_name' do
   session[:player_name] = params[:player_name]
+
   if session[:player_name] == ''
     @red = "<strong>Please</strong> enter a name."
+
     erb :name
   else
     redirect '/new_game'
@@ -84,11 +96,14 @@ get '/new_game' do
     session[:player_cash] = 500
     session[:player_bet] = ''
     session[:dealer_hand] = []
+
     new_deck
+
     2.times do
       deal(session[:player_hand])
       deal(session[:dealer_hand])
     end
+
     redirect '/bet'
   else
     redirect '/name'
@@ -102,9 +117,11 @@ end
 post '/post_bet' do
   session[:player_bet] = params[:player_bet].to_i
   if session[:player_bet] > 0 && session[:player_bet] <= session[:player_cash]
+
     redirect '/blackjack'
   else
     @red = "<strong>Invalid input</strong>"
+
     erb :bet
   end
 end
@@ -112,21 +129,35 @@ end
 get '/blackjack' do
   if calculate_total(session[:player_hand]) == BLACKJACK ||
     calculate_total(session[:dealer_hand]) == BLACKJACK
+
     case
     when calculate_total(session[:player_hand]) == BLACKJACK &&
       calculate_total(session[:dealer_hand]) == BLACKJACK
+
       session[:player_turn] = false
       @blue = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
+      erb :blackjack
+
     when calculate_total(session[:player_hand]) == BLACKJACK
       session[:player_turn] = false
       session[:player_cash] += session[:player_bet]
+
       @green = "<strong>Blackjack!</strong> You win!"
+      erb :blackjack
+
     when calculate_total(session[:dealer_hand]) == BLACKJACK
       session[:player_turn] = false
       session[:player_cash] -= session[:player_bet]
+
       @red = "<strong>Dealer hits Blackjack</strong> You lose."
+
+      if session[:player_cash] == 0
+        @gameover = true
+        erb :poorhouse
+      else
+        erb :blackjack
+      end
     end
-    erb :blackjack
   else
     redirect '/busted'
   end
@@ -135,20 +166,26 @@ end
 get '/busted' do
   if calculate_total(session[:player_hand]) > BLACKJACK ||
     calculate_total(session[:dealer_hand]) > BLACKJACK
+
     case
     when calculate_total(session[:player_hand]) > BLACKJACK
       session[:player_turn] = false
       session[:player_cash] -= session[:player_bet]
+
       @red = "<strong>You busted!</strong> Dealer wins"
-      if session[:player_cash] == 0                               # <===== This for blackjack, etc.
+
+      if session[:player_cash] == 0
         @gameover = true
         erb :poorhouse
+
       else
         erb :busted
       end
+
     when calculate_total(session[:dealer_hand]) > BLACKJACK
       session[:player_turn] = false
       session[:player_cash] += session[:player_bet]
+
       @green = "<strong>Dealer Busts</strong> You win!"
       erb :busted
     end
@@ -160,18 +197,32 @@ end
 get '/hand/over' do
   if session[:player_turn] == false
     case
+
     when calculate_total(session[:player_hand]) >
       calculate_total(session[:dealer_hand])
+
       session[:player_cash] += session[:player_bet]
       @green = "<strong>You win</strong> this hand!"
+
     when calculate_total(session[:player_hand]) <
       calculate_total(session[:dealer_hand])
+      
       session[:player_cash] -= session[:player_bet]
       @red = "<strong>Dealer wins</strong> this hand."
+
+      if session[:player_cash] == 0
+        @gameover = true
+        erb :poorhouse
+      else
+        erb :over
+      end
+
     when calculate_total(session[:player_hand]) ==
       calculate_total(session[:dealer_hand])
+
       @blue = "<strong>It's a Push</strong> You and the Dealer have the same score."
     end
+
     erb :over
   else
     redirect '/game'
@@ -193,6 +244,7 @@ get '/dealer/hit' do
     deal(session[:dealer_hand])
     redirect '/dealer/hit'
   else
+
     redirect '/blackjack'
   end
 end
@@ -205,10 +257,12 @@ post '/new_hand' do
   session[:player_turn] = true
   session[:player_hand] = []
   session[:dealer_hand] = []
+
   2.times do
     deal(session[:player_hand])
     deal(session[:dealer_hand])
   end
+
   redirect '/bet'
 end
 
@@ -217,7 +271,11 @@ get '/about' do
   erb :about
 end
 
-post '/vegas' do
+get '/vegas' do
+  session[:player_turn] = nil
+  session[:player_hand] = nil
+  session[:player_bet] = nil
+  session[:dealer_hand] = nil
   @gameover = true
   erb :vegas
 end
@@ -228,6 +286,7 @@ get '/poorhouse' do
 end
 
 get '/cat' do
+  @gameover = true
   erb :cat
 end
 
