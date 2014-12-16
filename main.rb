@@ -67,7 +67,8 @@ end
 
 get '/' do
   if session[:player_name]
-    erb :bet
+    session.clear
+    erb :index
   else
     erb :index
   end
@@ -119,7 +120,7 @@ post '/post_bet' do
 
     redirect '/blackjack'
   else
-    @red = "<strong>Invalid input</strong>"
+    @red = "<strong>Invalid Amount</strong>"
 
     erb :bet
   end
@@ -128,6 +129,7 @@ end
 get '/blackjack' do
   if calculate_total(session[:player_hand]) == BLACKJACK ||
     calculate_total(session[:dealer_hand]) == BLACKJACK
+    
     case
     when calculate_total(session[:player_hand]) == BLACKJACK &&
       calculate_total(session[:dealer_hand]) == BLACKJACK
@@ -145,6 +147,7 @@ get '/blackjack' do
       session[:player_turn] = false
       session[:player_cash] -= session[:player_bet]
       @red = "<strong>Dealer hits Blackjack</strong> You lose."
+
       if session[:player_cash] == 0
         @gameover = true
         erb :poorhouse
@@ -160,8 +163,8 @@ end
 get '/busted' do
   if calculate_total(session[:player_hand]) > BLACKJACK ||
     calculate_total(session[:dealer_hand]) > BLACKJACK
+    
     case
-   
     when calculate_total(session[:player_hand]) > BLACKJACK
       session[:player_turn] = false
       session[:player_cash] -= session[:player_bet]
@@ -186,6 +189,7 @@ end
 
 get '/hand/over' do
   if session[:player_turn] == false
+    
     case
     when calculate_total(session[:player_hand]) >
       calculate_total(session[:dealer_hand])
@@ -257,10 +261,6 @@ get '/about' do
 end
 
 get '/vegas' do
-  session[:player_turn] = nil
-  session[:player_hand] = nil
-  session[:player_bet] = nil
-  session[:dealer_hand] = nil
   @gameover = true
   erb :vegas
 end
