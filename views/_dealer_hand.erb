@@ -6,7 +6,7 @@
   <h4>
     Dealer's cards 
     <span class="pad20px"><%= random_suit %></span>
-    Total: <%= calculate_total(session[:dealer_hand]) %>
+    Total: <%= calculate_hand_total(session[:dealer_hand]) %>
   </h4>
   <% session[:dealer_hand].each do |card| %>
     <%= generate_card_image_url(card) %>

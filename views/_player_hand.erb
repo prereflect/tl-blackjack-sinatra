@@ -1,6 +1,6 @@
 <h4>
   Toby's cards
-  <span class="pad20px"><%= random_suit %></span> Total: <%= calculate_total(session[:player_hand]) %>
+  <span class="pad20px"><%= random_suit %></span> Total: <%= calculate_hand_total(session[:player_hand]) %>
   <span class="pad20px"><%= random_suit %></span> Bet: $<%= session[:player_bet] %>
   <span class="pad20px"><%= random_suit %></span> Cash: $<%= session[:player_cash] %>
   <% if session[:player_turn] %>
