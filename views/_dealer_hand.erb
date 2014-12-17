@@ -1,7 +1,7 @@
 <% if session[:player_turn] %>
   <h4>Dealer's cards</h4>
   <img src="/images/cards/cover.png" />
-  <%= generate_pic_url(session[:dealer_hand][1]) %>
+  <%= generate_card_image_url(session[:dealer_hand][1]) %>
 <% else %>
   <h4>
     Dealer's cards 
