@@ -17,8 +17,8 @@ helpers do
     session[:deck].shuffle!
   end
 
-  def generate_pic_url(card)
-    pic_name = case card[1]
+  def generate_card_image_url(card)
+    card_image_name = case card[1]
                when 'H'
                  "hearts_#{ card[0].to_s }.png"
                when 'D'
@@ -29,7 +29,7 @@ helpers do
                  "spades_#{ card[0].to_s }.png"
                end
 
-    pic_url = "<img src=/images/cards/#{ pic_name } class='card_pic'>"
+    pic_url = "<img src=/images/cards/#{ card_image_name } class='card_pic'>"
   end
   
   def deal(hand)

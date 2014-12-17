@@ -9,7 +9,7 @@
     Total: <%= calculate_total(session[:dealer_hand]) %>
   </h4>
   <% session[:dealer_hand].each do |card| %>
-    <%= generate_pic_url(card) %>
+    <%= generate_card_image_url(card) %>
   <% end %>
 <% end %>
 
