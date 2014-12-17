@@ -20,13 +20,13 @@ helpers do
   def generate_pic_url(card)
     pic_name = case card[1]
                when 'H'
-                 'hearts_' + card[0].to_s + '.png'
+                 "hearts_#{ card[0].to_s }.png"
                when 'D'
-                 'diamonds_' + card[0].to_s + '.png'
+                 "diamonds_#{ card[0].to_s }.png"
                when 'C'
-                 'clubs_' + card[0].to_s + '.png'
+                 "clubs_#{ card[0].to_s }.png"
                when 'S'
-                 'spades_' + card[0].to_s + '.png'
+                 "spades_#{ card[0].to_s }.png"
                end
 
     pic_url = "<img src=/images/cards/#{ pic_name } class='card_pic'>"
