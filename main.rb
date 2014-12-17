@@ -29,7 +29,7 @@ helpers do
                  "spades_#{card[0].to_s}.png"
                end
 
-    pic_url = "<img src=/images/cards/#{card_image_name} class='card_pic'>"
+    card_image_url = "<img src=/images/cards/#{card_image_name} />"
   end
   
   def deal(hand)
@@ -59,8 +59,8 @@ helpers do
 
   def random_suit
     suits = ["&clubs;", "&diams;", "&hearts;", "&spades;"]
-    a_suit = suits.sample
-    a_suit
+    random_suit = suits.sample
+    random_suit
   end
 
 end
