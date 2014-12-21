@@ -63,6 +63,12 @@ helpers do
     random_suit
   end
 
+  class String
+    def is_integer?
+      self.to_i.to_s == self
+    end
+  end
+
 end
 
 get '/' do
@@ -115,13 +121,17 @@ get '/bet' do
 end
 
 post '/bet' do
-  session[:player_bet] = params[:player_bet].to_i
-  if session[:player_bet] > 0 && session[:player_bet] <= session[:player_cash]
-
-    redirect '/blackjack'
+  case
+  when params[:player_bet].is_integer?
+    session[:player_bet] = params[:player_bet].to_i
+    if session[:player_bet] > 0 && session[:player_bet] <= session[:player_cash]
+      redirect '/blackjack'
+    else
+      @error = "<strong>Invalid Amount</strong>"
+      erb :bet
+    end
   else
     @error = "<strong>Invalid Amount</strong>"
-
     erb :bet
   end
 end
