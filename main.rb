@@ -68,7 +68,6 @@ helpers do
       self.to_i.to_s == self
     end
   end
-
 end
 
 get '/' do
@@ -145,13 +144,13 @@ get '/blackjack' do
       calculate_hand_total(session[:dealer_hand]) == BLACKJACK
       session[:player_turn] = false
       @warning = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
-      erb :blackjack
+      erb :game
     
     when calculate_hand_total(session[:player_hand]) == BLACKJACK
       session[:player_turn] = false
       session[:player_cash] += session[:player_bet]
       @success = "<strong>Blackjack!</strong> You win!"
-      erb :blackjack
+      erb :game
     
     when calculate_hand_total(session[:dealer_hand]) == BLACKJACK
       session[:player_turn] = false
@@ -162,11 +161,11 @@ get '/blackjack' do
         @game_over = true
         erb :poorhouse
       else
-        erb :blackjack
+        erb :game
       end
     end
   else
-    redirect '/busted'
+    redirect '/game'
   end
 end
 
@@ -183,17 +182,17 @@ get '/busted' do
         @game_over = true
         erb :poorhouse
       else
-        erb :busted
+        erb :game
       end
    
     when calculate_hand_total(session[:dealer_hand]) > BLACKJACK
       session[:player_turn] = false
       session[:player_cash] += session[:player_bet]
       @success = "<strong>Dealer Busts</strong> You win!"
-      erb :busted
+      erb :game
     end
   else
-    redirect '/hand/over'
+    redirect '/game'
   end
 end
 
@@ -205,7 +204,7 @@ get '/hand/over' do
       calculate_hand_total(session[:dealer_hand])
       @success = "<strong>You win</strong> this hand!"
       session[:player_cash] += session[:player_bet]
-      erb :over
+      erb :game
    
     when calculate_hand_total(session[:player_hand]) <
       calculate_hand_total(session[:dealer_hand])
@@ -215,13 +214,13 @@ get '/hand/over' do
         @game_over = true
         erb :poorhouse
       else
-        erb :over
+        erb :game
       end
    
     when calculate_hand_total(session[:player_hand]) ==
       calculate_hand_total(session[:dealer_hand])
       @warning = "<strong>It's a Push</strong> You and the Dealer have the same score."
-      erb :over
+      erb :game
     end
   else
     redirect '/game'
@@ -238,13 +237,12 @@ get '/player/stay' do
   redirect '/dealer/hit'
 end
 
-get '/dealer/hit' do
+post '/dealer/hit' do
   if calculate_hand_total(session[:dealer_hand]) < DEALER_STAY
     deal(session[:dealer_hand])
     redirect '/dealer/hit'
   else
-
-    redirect '/blackjack'
+    erb :game
   end
 end
 
