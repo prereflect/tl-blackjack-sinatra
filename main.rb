@@ -124,7 +124,7 @@ post '/bet' do
   when params[:player_bet].is_integer?
     session[:player_bet] = params[:player_bet].to_i
     if session[:player_bet] > 0 && session[:player_bet] <= session[:player_cash]
-      redirect '/blackjack'
+      redirect '/game'
     else
       @error = "<strong>Invalid Amount</strong>"
       erb :bet
@@ -159,13 +159,13 @@ get '/blackjack' do
 
       if session[:player_cash] == 0
         @game_over = true
-        erb :poorhouse
+        redirect '/poorhouse'
       else
         erb :game
       end
     end
   else
-    redirect '/game'
+    redirect '/busted'
   end
 end
 
@@ -180,7 +180,7 @@ get '/busted' do
       @error = "<strong>You busted!</strong> Dealer wins"
       if session[:player_cash] == 0
         @game_over = true
-        erb :poorhouse
+        redirect '/poorhouse'
       else
         erb :game
       end
@@ -192,7 +192,7 @@ get '/busted' do
       erb :game
     end
   else
-    redirect '/game'
+    redirect '/hand/over'
   end
 end
 
@@ -212,7 +212,7 @@ get '/hand/over' do
       @error = "<strong>Dealer wins</strong> this hand."
       if session[:player_cash] == 0
         @game_over = true
-        erb :poorhouse
+        redirect '/poorhouse'
       else
         erb :game
       end
@@ -223,7 +223,7 @@ get '/hand/over' do
       erb :game
     end
   else
-    redirect '/game'
+    erb :game
   end
 end
 
@@ -237,12 +237,12 @@ get '/player/stay' do
   redirect '/dealer/hit'
 end
 
-post '/dealer/hit' do
+get '/dealer/hit' do
   if calculate_hand_total(session[:dealer_hand]) < DEALER_STAY
     deal(session[:dealer_hand])
     redirect '/dealer/hit'
   else
-    erb :game
+    redirect '/blackjack'
   end
 end
 
