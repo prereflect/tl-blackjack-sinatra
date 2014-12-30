@@ -4,7 +4,13 @@ body {
 }
 
 span.pad20px { padding: 20px; }
+
 div.well, span.add-on { color: rgb(80,80,80) }
+
+form#hit_form { display: inline; }
+form#stay_form { display: inline; }
+form#new_hand { display: inline; }
+form#vegas { display: inline; }
 
 .img-polaroid {
   padding: 4px;
