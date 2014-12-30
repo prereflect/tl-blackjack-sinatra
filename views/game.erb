@@ -13,6 +13,11 @@
   <% end %>
 <% end %>
 
+
+<div class='well' id='player_area'>
+
+<a id='player_color' href="#">Change it to yellow</a>
+
 <h4>
   <%= session[:player_name] %>'s cards
   <span class="pad20px"><%= random_suit %></span> Total: <%= calculate_hand_total(session[:player_hand]) %>
@@ -41,4 +46,7 @@
 <% session[:player_hand].each do |card| %>
   <%= generate_card_image_url(card) %>
 <% end %>
+
+
+</div>
 
