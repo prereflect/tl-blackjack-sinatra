@@ -282,11 +282,6 @@ get '/vegas' do
   erb :vegas
 end
 
-get '/poorhouse' do
-  @game_over = true
-  erb :poorhouse
-end
-
 get '/cat' do
   @game_over = true
   erb :cat
