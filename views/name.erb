@@ -1,3 +1,13 @@
+<%if @error %>
+  <div class="alert alert-error"><%=@error%></div>
+<% end %>
+<%if @success %>
+  <div class="alert alert-success"><%=@success%></div>
+<% end %>
+<%if @warning %>
+  <div class="alert alert-info"><%=@warning%></div>
+<% end %>
+
 <h4>What's your name?</h4>
 <form action='/name' method='post'class="navbar-form pull-left">
   <p><input type="text" class="span3" name="player_name"></p>
