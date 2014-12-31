@@ -10,5 +10,14 @@ $(document).ready(function() {
     return false;
   });
 
+  $(document).on('click', '#stay_form input', function(){
+    $.ajax({
+      type: 'GET',
+      url: '/player/stay'
+    }).done(function(msg) {
+      $('#game').replaceWith(msg);
+    });
+    return false;
+  });
 });
 

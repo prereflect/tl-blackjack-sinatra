@@ -71,12 +71,8 @@ helpers do
 end
 
 get '/' do
-  if session[:player_name]
     session.clear
     erb :index
-  else
-    erb :index
-  end
 end
 
 get '/name' do
@@ -220,7 +216,7 @@ get '/hand/over' do
     when calculate_hand_total(session[:player_hand]) ==
       calculate_hand_total(session[:dealer_hand])
       @warning = "<strong>It's a Push</strong> You and the Dealer have the same score."
-      erb :game
+      erb :game, layout: false
     end
   else
     erb :game, layout: false
