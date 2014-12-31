@@ -1,9 +1,25 @@
-<div class="well">
-  <h4>Blackjack Web App Made with Sinatra</h4>
-  <p>This Blackjack web application is an assigment from Tealeaf Academy's 
-    <a href="http://www.gotealeaf.com/curriculum#!ruby">Introduction to Ruby and Web Development</a> course.
-  </p>
-  <p>Made with the <a href="http://www.sinatrarb.com/intro.html">Sinatra</a> DSL. 
-    This assignment focused on learning <a href="http://www.gotealeaf.com/books/http">HTTP</a>, POST, GET, etc.
-  </p>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <div class="brand">Sinatra Shouts Blackjack!</div> 
+      <% if @game_over %>
+        <ul class="nav">
+          <li><a href="/new_game">New Game</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="well">
+    <h4>Blackjack Web App Made with Sinatra</h4>
+    <p>This Blackjack web application is an assigment from Tealeaf Academy's 
+      <a href="http://www.gotealeaf.com/curriculum#!ruby">Introduction to Ruby and Web Development</a> course.
+    </p>
+    <p>Made with the <a href="http://www.sinatrarb.com/intro.html">Sinatra</a> DSL. 
+      This assignment focused on learning <a href="http://www.gotealeaf.com/books/http">HTTP</a>, POST, GET, etc.
+    </p>
+  </div>
 </div>

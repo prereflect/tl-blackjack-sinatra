@@ -1,16 +1,32 @@
-<%if @error %>
-  <div class="alert alert-error"><%=@error%></div>
-<% end %>
-<%if @success %>
-  <div class="alert alert-success"><%=@success%></div>
-<% end %>
-<%if @warning %>
-  <div class="alert alert-info"><%=@warning%></div>
-<% end %>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <div class="brand">Sinatra Shouts Blackjack!</div>                     
+      <% if @game_over %>
+        <ul class="nav">
+          <li><a href="/new_game">New Game</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+</div>
 
-<h4>What's your name?</h4>
-<form action='/name' method='post'class="navbar-form pull-left">
-  <p><input type="text" class="span3" name="player_name"></p>
-  <p><button type="submit" class="btn">Submit</button></p>
-</form>
+<div class="container">
+  <%if @error %>
+    <div class="alert alert-error"><%=@error%></div>
+  <% end %>
+  <%if @success %>
+    <div class="alert alert-success"><%=@success%></div>
+  <% end %>
+  <%if @warning %>
+    <div class="alert alert-info"><%=@warning%></div>
+  <% end %>
+
+  <h4>What's your name?</h4>
+  <form action='/name' method='post'class="navbar-form pull-left">
+    <p><input type="text" class="span3" name="player_name"></p>
+    <p><button type="submit" class="btn">Submit</button></p>
+  </form>
+</div>
 

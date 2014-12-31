@@ -1,2 +1,19 @@
-<h4>OK then, here is a random picture of a cat...</h4>
-<img class="img-rounded img-polaroid" src="http://lorempixel.com/480/300/cats/" />
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <div class="brand">Sinatra Shouts Blackjack!</div> 
+      <% if @game_over %>
+        <ul class="nav">
+          <li><a href="/new_game">New Game</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <h4>OK then, here is a random picture of a cat...</h4>
+  <img class="img-rounded img-polaroid" src="http://lorempixel.com/480/300/cats/" />
+</div>
+

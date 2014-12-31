@@ -1,21 +1,38 @@
-<%if @error %>
-  <div class="alert alert-error"><%=@error%></div>
-<% end %>
-<%if @success %>
-  <div class="alert alert-success"><%=@success%></div>
-<% end %>
-<%if @warning %>
-  <div class="alert alert-info"><%=@warning%></div>
-<% end %>
-
-<h4><%= session[:player_name] %>, you have $<%= session[:player_cash] %></h4>
-<h5>How much do you want to bet?</h5>
-
-<form action='/bet' method='post'class="navbar-form pull-left">
-  <div class="input-prepend input-append">
-    <span class="add-on">$</span>
-    <input type="text" class="span2" name="player_bet">
-    <span class="add-on">.00</span>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <div class="brand">Sinatra Shouts Blackjack!</div> 
+      <% if @game_over %>
+        <ul class="nav">
+          <li><a href="/new_game">New Game</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      <% end %>
+    </div>
   </div>
-  <p><button type="submit" class="btn">Make Bet!</button></p>
-</form>
+</div>
+
+<div class="container">
+  <%if @error %>
+    <div class="alert alert-error"><%=@error%></div>
+  <% end %>
+  <%if @success %>
+    <div class="alert alert-success"><%=@success%></div>
+  <% end %>
+  <%if @warning %>
+    <div class="alert alert-info"><%=@warning%></div>
+  <% end %>
+
+  <h4><%= session[:player_name] %>, you have $<%= session[:player_cash] %></h4>
+  <h5>How much do you want to bet?</h5>
+
+  <form action='/bet' method='post'class="navbar-form pull-left">
+    <div class="input-prepend input-append">
+      <span class="add-on">$</span>
+      <input type="text" class="span2" name="player_bet">
+      <span class="add-on">.00</span>
+    </div>
+    <p><button type="submit" class="btn">Make Bet!</button></p>
+  </form>
+</div>
+
