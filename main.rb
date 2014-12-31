@@ -82,7 +82,7 @@ end
 post '/name' do
   session[:player_name] = params[:player_name]
 
-  if session[:player_name] == ''
+  if session[:player_name].empty?
     @error = "<strong>Please</strong> enter a name."
     erb :name
   else
@@ -153,14 +153,10 @@ get '/blackjack' do
       calculate_hand_total(session[:dealer_hand]) == BLACKJACK
       session[:player_turn] = false
       @warning = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
-      erb :game, layout: false
-    
     when calculate_hand_total(session[:player_hand]) == BLACKJACK
       session[:player_turn] = false
       session[:player_cash] += session[:player_bet]
       @success = "<strong>Blackjack!</strong> You win!"
-      erb :game, layout: false
-    
     when calculate_hand_total(session[:dealer_hand]) == BLACKJACK
       session[:player_turn] = false
       session[:player_cash] -= session[:player_bet]
@@ -168,11 +164,9 @@ get '/blackjack' do
       if session[:player_cash] == 0
         @game_over = true
         @error = "<strong>You're Broke</strong>. Game Over!"
-        erb :game, layout: false
-      else
-        erb :game, layout: false
       end
     end
+    erb :game, layout: false
   else
     redirect '/busted'
   end
@@ -190,17 +184,13 @@ get '/busted' do
       if session[:player_cash] == 0
         @game_over = true
         @error = "<strong>You're Broke</strong>. Game Over!"
-        erb :game, layout: false
-      else
-        erb :game, layout: false
       end
-   
     when calculate_hand_total(session[:dealer_hand]) > BLACKJACK
       session[:player_turn] = false
       session[:player_cash] += session[:player_bet]
       @success = "<strong>Dealer Busts</strong> You win!"
-      erb :game, layout: false
     end
+    erb :game, layout: false
   else
     redirect '/hand/over'
   end
@@ -214,8 +204,6 @@ get '/hand/over' do
       calculate_hand_total(session[:dealer_hand])
       @success = "<strong>You win</strong> this hand!"
       session[:player_cash] += session[:player_bet]
-      erb :game, layout: false
-   
     when calculate_hand_total(session[:player_hand]) <
       calculate_hand_total(session[:dealer_hand])
       session[:player_cash] -= session[:player_bet]
@@ -223,15 +211,10 @@ get '/hand/over' do
       if session[:player_cash] == 0
         @game_over = true
         @error = "<strong>You're Broke</strong>. Game Over!"
-        erb :game, layout: false
-      else
-        erb :game, layout: false
       end
-   
     when calculate_hand_total(session[:player_hand]) ==
       calculate_hand_total(session[:dealer_hand])
       @warning = "<strong>It's a Push</strong> You and the Dealer have the same score."
-      erb :game, layout: false
     end
   else
     erb :game, layout: false
