@@ -144,13 +144,13 @@ get '/blackjack' do
       calculate_hand_total(session[:dealer_hand]) == BLACKJACK
       session[:player_turn] = false
       @warning = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
-      erb :game
+      erb :game, layout: false
     
     when calculate_hand_total(session[:player_hand]) == BLACKJACK
       session[:player_turn] = false
       session[:player_cash] += session[:player_bet]
       @success = "<strong>Blackjack!</strong> You win!"
-      erb :game
+      erb :game, layout: false
     
     when calculate_hand_total(session[:dealer_hand]) == BLACKJACK
       session[:player_turn] = false
@@ -161,7 +161,7 @@ get '/blackjack' do
         @game_over = true
         redirect '/poorhouse'
       else
-        erb :game
+        erb :game, layout: false
       end
     end
   else
@@ -182,14 +182,14 @@ get '/busted' do
         @game_over = true
         redirect '/poorhouse'
       else
-        erb :game
+        erb :game, layout: false
       end
    
     when calculate_hand_total(session[:dealer_hand]) > BLACKJACK
       session[:player_turn] = false
       session[:player_cash] += session[:player_bet]
       @success = "<strong>Dealer Busts</strong> You win!"
-      erb :game
+      erb :game, layout: false
     end
   else
     redirect '/hand/over'
@@ -204,7 +204,7 @@ get '/hand/over' do
       calculate_hand_total(session[:dealer_hand])
       @success = "<strong>You win</strong> this hand!"
       session[:player_cash] += session[:player_bet]
-      erb :game
+      erb :game, layout: false
    
     when calculate_hand_total(session[:player_hand]) <
       calculate_hand_total(session[:dealer_hand])
@@ -214,7 +214,7 @@ get '/hand/over' do
         @game_over = true
         redirect '/poorhouse'
       else
-        erb :game
+        erb :game, layout: false
       end
    
     when calculate_hand_total(session[:player_hand]) ==
@@ -223,7 +223,7 @@ get '/hand/over' do
       erb :game
     end
   else
-    erb :game
+    erb :game, layout: false
   end
 end
 

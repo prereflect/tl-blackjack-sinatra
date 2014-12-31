@@ -1,48 +1,52 @@
-<% if session[:player_turn] %>
-  <h4>Dealer's cards</h4>
-  <img src="/images/cards/cover.png" />
-  <%= generate_card_image_url(session[:dealer_hand][1]) %>
-<% else %>
+<div id='game'>
+
+  <% if session[:player_turn] %>
+    <h4>Dealer's cards</h4>
+    <img src="/images/cards/cover.png" />
+    <%= generate_card_image_url(session[:dealer_hand][1]) %>
+  <% else %>
+    <h4>
+      Dealer's cards 
+      <span class="pad20px"><%= random_suit %></span>
+      Total: <%= calculate_hand_total(session[:dealer_hand]) %>
+    </h4>
+    <% session[:dealer_hand].each do |card| %>
+      <%= generate_card_image_url(card) %>
+    <% end %>
+  <% end %>
+
   <h4>
-    Dealer's cards 
-    <span class="pad20px"><%= random_suit %></span>
-    Total: <%= calculate_hand_total(session[:dealer_hand]) %>
+    <%= session[:player_name] %>'s cards
+    <span class="pad20px"><%= random_suit %></span> Total: <%= calculate_hand_total(session[:player_hand]) %>
+    <span class="pad20px"><%= random_suit %></span> Bet: $<%= session[:player_bet] %>
+    <span class="pad20px"><%= random_suit %></span> Cash: $<%= session[:player_cash] %>
+
+    <% if session[:player_turn] %>
+       <span class="pad20px">
+         <form id='hit_form' action='/player/hit' method='post'>
+          <input type="submit" class="btn" value="Hit" />
+         </form>
+         <form id='stay_form' action='/player/stay' method='get'>
+          <input type="submit" class="btn" value="Stay" />
+         </form>
+       </span>
+ 
+     <% else %>
+      <span class="pad20px">
+        <form id='new_hand' action='/new_hand' method='post'>
+          <input type="submit" class="btn" value="New Hand" />
+        </form>
+        <form id='vegas' action='/vegas' method='get'>
+          <input type="submit" class="btn" value="Quit Game" />
+        </form>
+      </span>
+ 
+    <% end %>
   </h4>
-  <% session[:dealer_hand].each do |card| %>
+
+  <% session[:player_hand].each do |card| %>
     <%= generate_card_image_url(card) %>
   <% end %>
-<% end %>
 
-<h4>
-  <%= session[:player_name] %>'s cards
-  <span class="pad20px"><%= random_suit %></span> Total: <%= calculate_hand_total(session[:player_hand]) %>
-  <span class="pad20px"><%= random_suit %></span> Bet: $<%= session[:player_bet] %>
-  <span class="pad20px"><%= random_suit %></span> Cash: $<%= session[:player_cash] %>
-
-<% if session[:player_turn] %>
-     <span class="pad20px">
-       <form id='hit_form' action='/player/hit' method='post'>
-         <button type="submit" class="btn" name ="player_hit">Hit</button>
-       </form>
-       <form id='stay_form' action='/player/stay' method='get'>
-         <button type="submit" class="btn" name ="player_stay">Stay</button>
-       </form>
-     </span>
- 
-   <% else %>
-    <span class="pad20px">
-      <form id='new_hand' action='/new_hand' method='post'>
-        <button type="submit" class="btn" name ="new_hand">New Hand</button>
-      </form>
-      <form id='vegas' action='/vegas' method='get'>
-        <button type="submit" class="btn" name ="quit_game">Quit Game</button>
-      </form>
-    </span>
- 
-  <% end %>
-</h4>
-
-<% session[:player_hand].each do |card| %>
-  <%= generate_card_image_url(card) %>
-<% end %>
+</div>
 
