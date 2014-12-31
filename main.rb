@@ -68,6 +68,32 @@ helpers do
       self.to_i.to_s == self
     end
   end
+
+  def initial_blackjack
+    if calculate_hand_total(session[:player_hand]) == BLACKJACK ||
+      calculate_hand_total(session[:dealer_hand]) == BLACKJACK
+      case
+      when calculate_hand_total(session[:player_hand]) == BLACKJACK &&
+        calculate_hand_total(session[:dealer_hand]) == BLACKJACK
+        session[:player_turn] = false
+        @warning = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
+      when calculate_hand_total(session[:player_hand]) == BLACKJACK
+        session[:player_turn] = false
+        session[:player_cash] += session[:player_bet]
+        @success = "<strong>Blackjack!</strong> You win!"
+      when calculate_hand_total(session[:dealer_hand]) == BLACKJACK
+        session[:player_turn] = false
+        session[:player_cash] -= session[:player_bet]
+        @error = "<strong>Dealer hits Blackjack</strong> You lose."
+        if session[:player_cash] == 0
+          @game_over = true
+          @error = "<strong>You're Broke</strong>. Game Over!"
+        end
+      end
+    end
+    erb :game
+  end
+
 end
 
 get '/' do
@@ -239,7 +265,11 @@ get '/dealer/hit' do
 end
 
 get '/game' do
-  erb :game
+  if initial_blackjack
+    erb :game
+  else
+    erb :game
+  end
 end
 
 get '/about' do
