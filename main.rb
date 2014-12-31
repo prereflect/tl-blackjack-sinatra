@@ -147,7 +147,6 @@ end
 get '/blackjack' do
   if calculate_hand_total(session[:player_hand]) == BLACKJACK ||
     calculate_hand_total(session[:dealer_hand]) == BLACKJACK
-    
     case
     when calculate_hand_total(session[:player_hand]) == BLACKJACK &&
       calculate_hand_total(session[:dealer_hand]) == BLACKJACK
@@ -175,7 +174,6 @@ end
 get '/busted' do
   if calculate_hand_total(session[:player_hand]) > BLACKJACK ||
     calculate_hand_total(session[:dealer_hand]) > BLACKJACK
-    
     case
     when calculate_hand_total(session[:player_hand]) > BLACKJACK
       session[:player_turn] = false
@@ -198,7 +196,6 @@ end
 
 get '/hand/over' do
   if session[:player_turn] == false
-    
     case
     when calculate_hand_total(session[:player_hand]) >
       calculate_hand_total(session[:dealer_hand])
@@ -216,6 +213,7 @@ get '/hand/over' do
       calculate_hand_total(session[:dealer_hand])
       @warning = "<strong>It's a Push</strong> You and the Dealer have the same score."
     end
+    erb :game, layout: false
   else
     erb :game, layout: false
   end
