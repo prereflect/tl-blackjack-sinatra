@@ -40,7 +40,7 @@
          </form>
        </span>
  
-     <% else %>
+    <% elsif session[:player_turn] == false && session[:player_cash] != 0 %>
       <span class="pad20px">
         <form id='new_hand' action='/new_hand' method='post'>
           <input type="submit" class="btn" value="New Hand" />
@@ -49,7 +49,8 @@
           <input type="submit" class="btn" value="Quit Game" />
         </form>
       </span>
- 
+    <% else %>
+      <% @game_over = true %>
     <% end %>
   </h4>
 

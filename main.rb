@@ -131,6 +131,19 @@ post '/bet' do
   end
 end
 
+post '/new_hand' do
+  session[:player_turn] = true
+  session[:player_hand] = []
+  session[:dealer_hand] = []
+
+  2.times do
+    deal(session[:player_hand])
+    deal(session[:dealer_hand])
+  end
+
+  redirect '/bet'
+end
+
 get '/blackjack' do
   if calculate_hand_total(session[:player_hand]) == BLACKJACK ||
     calculate_hand_total(session[:dealer_hand]) == BLACKJACK
@@ -152,10 +165,10 @@ get '/blackjack' do
       session[:player_turn] = false
       session[:player_cash] -= session[:player_bet]
       @error = "<strong>Dealer hits Blackjack</strong> You lose."
-
       if session[:player_cash] == 0
         @game_over = true
-        redirect '/poorhouse'
+        @error = "<strong>You're Broke</strong>. Game Over!"
+        erb :game, layout: false
       else
         erb :game, layout: false
       end
@@ -176,7 +189,8 @@ get '/busted' do
       @error = "<strong>You busted!</strong> Dealer wins"
       if session[:player_cash] == 0
         @game_over = true
-        redirect '/poorhouse'
+        @error = "<strong>You're Broke</strong>. Game Over!"
+        erb :game, layout: false
       else
         erb :game, layout: false
       end
@@ -208,7 +222,8 @@ get '/hand/over' do
       @error = "<strong>Dealer wins</strong> this hand."
       if session[:player_cash] == 0
         @game_over = true
-        redirect '/poorhouse'
+        @error = "<strong>You're Broke</strong>. Game Over!"
+        erb :game, layout: false
       else
         erb :game, layout: false
       end
@@ -244,19 +259,6 @@ end
 
 get '/game' do
   erb :game
-end
-
-post '/new_hand' do
-  session[:player_turn] = true
-  session[:player_hand] = []
-  session[:dealer_hand] = []
-
-  2.times do
-    deal(session[:player_hand])
-    deal(session[:dealer_hand])
-  end
-
-  redirect '/bet'
 end
 
 get '/about' do
