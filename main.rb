@@ -93,9 +93,8 @@ helpers do
           @error = "<strong>You're Broke</strong>. Game Over!"
         end
       end
+      session[:player_turn] = false
     end
-    session[:player_turn] = false
-    erb :game
   end
 
 end
@@ -221,17 +220,17 @@ end
 get '/hand/over' do
   if session[:player_turn] == false
     case
-    when player_total_hand > dealer_total_hand
+    when player_hand_total > dealer_hand_total
       @success = "<strong>You win</strong> this hand!"
       session[:player_cash] += session[:player_bet]
-    when player_total_hand < dealer_total_hand
+    when player_hand_total < dealer_hand_total
       session[:player_cash] -= session[:player_bet]
       @error = "<strong>Dealer wins</strong> this hand."
       if session[:player_cash] == 0
         @game_over = true
         @error = "<strong>You're Broke</strong>. Game Over!"
       end
-    when player_total_hand == dealer_total_hand
+    when player_hand_total == dealer_hand_total
       @warning = "<strong>It's a Push</strong> You and the Dealer have the same score."
     end
     erb :game, layout: false
@@ -251,7 +250,7 @@ get '/player/stay' do
 end
 
 get '/dealer/hit' do
-  if deal_hand_total < DEALER_STAY
+  if dealer_hand_total < DEALER_STAY
     deal(session[:dealer_hand])
     redirect '/dealer/hit'
   else
