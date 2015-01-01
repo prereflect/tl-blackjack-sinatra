@@ -77,31 +77,116 @@ helpers do
     end
   end
 
-  def initial_blackjack
+  def initial_blackjack?
     if player_hand_total == BLACKJACK || dealer_hand_total == BLACKJACK
+
       case
       when player_hand_total == BLACKJACK && dealer_hand_total == BLACKJACK
         @push = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
+
       when player_hand_total == BLACKJACK
         session[:player_cash] += session[:player_bet]
         @win = "<strong>Blackjack!</strong> You win!"
+
       when dealer_hand_total == BLACKJACK
         session[:player_cash] -= session[:player_bet]
         @lose = "<strong>Dealer hits Blackjack</strong> You lose."
+
         if session[:player_cash] == 0
           @game_over = true
           @lose = "<strong>You're Broke</strong>. Game Over!"
         end
       end
+
       session[:player_turn] = false
     end
   end
 
+  def has_blackjack?
+    if player_hand_total == BLACKJACK || dealer_hand_total == BLACKJACK
+
+      case
+      when player_hand_total == BLACKJACK
+        session[:player_cash] += session[:player_bet]
+        @win = "<strong>Blackjack!</strong> You win!"
+
+      when dealer_hand_total == BLACKJACK
+        session[:player_cash] -= session[:player_bet]
+        @lose = "<strong>Dealer hits Blackjack</strong> You lose."
+
+        if session[:player_cash] == 0
+          @game_over = true
+          @lose = "<strong>You're Broke</strong>. Game Over!"
+        end
+      end
+
+      session[:player_turn] = false
+      erb :game, layout: false
+
+    else
+      redirect '/busted'
+    end
+  end
+
+  def is_busted?
+    if player_hand_total > BLACKJACK || dealer_hand_total > BLACKJACK
+
+      case
+      when player_hand_total > BLACKJACK
+        session[:player_cash] -= session[:player_bet]
+        @lose = "<strong>You busted!</strong> Dealer wins"
+
+        if session[:player_cash] == 0
+          @game_over = true
+          @lose = "<strong>You're Broke</strong>. Game Over!"
+        end
+
+      when dealer_hand_total > BLACKJACK
+        session[:player_cash] += session[:player_bet]
+        @win = "<strong>Dealer Busts</strong> You win!"
+      end
+
+      session[:player_turn] = false
+      erb :game, layout: false
+
+    else
+      redirect '/hand/over'
+    end
+  end
+
+  def hand_over?
+    if session[:player_turn] == false
+
+      case
+      when player_hand_total > dealer_hand_total
+        session[:player_cash] += session[:player_bet]
+        @win = "<strong>You win</strong> this hand!"
+
+      when player_hand_total < dealer_hand_total
+        session[:player_cash] -= session[:player_bet]
+        @lose = "<strong>Dealer wins</strong> this hand."
+
+        if session[:player_cash] == 0
+          @game_over = true
+          @lose = "<strong>You're Broke</strong>. Game Over!"
+        end
+
+      when player_hand_total == dealer_hand_total
+        @push = "<strong>It's a Push</strong> You and the Dealer have the same score."
+
+      end
+
+      erb :game, layout: false
+
+    else
+      erb :game, layout: false
+    end
+  end
 end
 
 get '/' do
-    session.clear
-    erb :index
+  session.clear
+  erb :index
 end
 
 get '/name' do
@@ -148,8 +233,10 @@ post '/bet' do
   case
   when params[:player_bet].is_integer?
     session[:player_bet] = params[:player_bet].to_i
+
     if session[:player_bet] > 0 && session[:player_bet] <= session[:player_cash]
       redirect '/game'
+
     else
       @error = "<strong>Invalid Amount</strong>"
       erb :bet
@@ -174,69 +261,15 @@ post '/new_hand' do
 end
 
 get '/blackjack' do
-  if player_hand_total == BLACKJACK || dealer_hand_total == BLACKJACK
-    case
-    when player_hand_total == BLACKJACK && dealer_hand_total == BLACKJACK
-      @push = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
-    when player_hand_total == BLACKJACK
-      session[:player_cash] += session[:player_bet]
-      @win = "<strong>Blackjack!</strong> You win!"
-    when dealer_hand_total == BLACKJACK
-      session[:player_cash] -= session[:player_bet]
-      @lose = "<strong>Dealer hits Blackjack</strong> You lose."
-      if session[:player_cash] == 0
-        @game_over = true
-        @lose = "<strong>You're Broke</strong>. Game Over!"
-      end
-    end
-    session[:player_turn] = false
-    erb :game, layout: false
-  else
-    redirect '/busted'
-  end
+  has_blackjack?
 end
 
 get '/busted' do
-  if player_hand_total > BLACKJACK || dealer_hand_total > BLACKJACK
-    case
-    when player_hand_total > BLACKJACK
-      session[:player_cash] -= session[:player_bet]
-      @lose = "<strong>You busted!</strong> Dealer wins"
-      if session[:player_cash] == 0
-        @game_over = true
-        @lose = "<strong>You're Broke</strong>. Game Over!"
-      end
-    when dealer_hand_total > BLACKJACK
-      session[:player_cash] += session[:player_bet]
-      @win = "<strong>Dealer Busts</strong> You win!"
-    end
-    session[:player_turn] = false
-    erb :game, layout: false
-  else
-    redirect '/hand/over'
-  end
+  is_busted?
 end
 
 get '/hand/over' do
-  if session[:player_turn] == false
-    case
-    when player_hand_total > dealer_hand_total
-      @win = "<strong>You win</strong> this hand!"
-      session[:player_cash] += session[:player_bet]
-    when player_hand_total < dealer_hand_total
-      session[:player_cash] -= session[:player_bet]
-      @lose = "<strong>Dealer wins</strong> this hand."
-      if session[:player_cash] == 0
-        @game_over = true
-        @lose = "<strong>You're Broke</strong>. Game Over!"
-      end
-    when player_hand_total == dealer_hand_total
-      @push = "<strong>It's a Push</strong> You and the Dealer have the same score."
-    end
-    erb :game, layout: false
-  else
-    erb :game, layout: false
-  end
+  hand_over?
 end
 
 post '/player/hit' do
@@ -259,7 +292,7 @@ get '/dealer/hit' do
 end
 
 get '/game' do
-  if initial_blackjack
+  if initial_blackjack?
     erb :game
   else
     erb :game
