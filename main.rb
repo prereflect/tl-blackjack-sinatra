@@ -19,15 +19,15 @@ helpers do
 
   def generate_card_image_url(card)
     card_image_name = case card[1]
-               when 'H'
-                 "hearts_#{card[0].to_s}.png"
-               when 'D'
-                 "diamonds_#{card[0].to_s}.png"
-               when 'C'
-                 "clubs_#{card[0].to_s}.png"
-               when 'S'
-                 "spades_#{card[0].to_s}.png"
-               end
+                      when 'H'
+                        "hearts_#{card[0].to_s}.png"
+                      when 'D'
+                        "diamonds_#{card[0].to_s}.png"
+                      when 'C'
+                        "clubs_#{card[0].to_s}.png"
+                      when 'S'
+                        "spades_#{card[0].to_s}.png"
+                      end
 
     card_image_url = "<img src=/images/cards/#{card_image_name} />"
   end
@@ -57,6 +57,14 @@ helpers do
     hand_total
   end
 
+  def player_hand_total
+    calculate_hand_total(session[:player_hand])
+  end
+
+  def dealer_hand_total
+    calculate_hand_total(session[:dealer_hand])
+  end
+
   def random_suit
     suits = ["&clubs;", "&diams;", "&hearts;", "&spades;"]
     random_suit = suits.sample
@@ -70,19 +78,14 @@ helpers do
   end
 
   def initial_blackjack
-    if calculate_hand_total(session[:player_hand]) == BLACKJACK ||
-      calculate_hand_total(session[:dealer_hand]) == BLACKJACK
+    if player_hand_total == BLACKJACK || dealer_hand_total == BLACKJACK
       case
-      when calculate_hand_total(session[:player_hand]) == BLACKJACK &&
-        calculate_hand_total(session[:dealer_hand]) == BLACKJACK
-        session[:player_turn] = false
+      when player_hand_total == BLACKJACK && dealer_hand_total == BLACKJACK
         @warning = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
-      when calculate_hand_total(session[:player_hand]) == BLACKJACK
-        session[:player_turn] = false
+      when player_hand_total == BLACKJACK
         session[:player_cash] += session[:player_bet]
         @success = "<strong>Blackjack!</strong> You win!"
-      when calculate_hand_total(session[:dealer_hand]) == BLACKJACK
-        session[:player_turn] = false
+      when dealer_hand_total == BLACKJACK
         session[:player_cash] -= session[:player_bet]
         @error = "<strong>Dealer hits Blackjack</strong> You lose."
         if session[:player_cash] == 0
@@ -91,6 +94,7 @@ helpers do
         end
       end
     end
+    session[:player_turn] = false
     erb :game
   end
 
@@ -171,19 +175,14 @@ post '/new_hand' do
 end
 
 get '/blackjack' do
-  if calculate_hand_total(session[:player_hand]) == BLACKJACK ||
-    calculate_hand_total(session[:dealer_hand]) == BLACKJACK
+  if player_hand_total == BLACKJACK || dealer_hand_total == BLACKJACK
     case
-    when calculate_hand_total(session[:player_hand]) == BLACKJACK &&
-      calculate_hand_total(session[:dealer_hand]) == BLACKJACK
-      session[:player_turn] = false
+    when player_hand_total == BLACKJACK && dealer_hand_total == BLACKJACK
       @warning = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
-    when calculate_hand_total(session[:player_hand]) == BLACKJACK
-      session[:player_turn] = false
+    when player_hand_total == BLACKJACK
       session[:player_cash] += session[:player_bet]
       @success = "<strong>Blackjack!</strong> You win!"
-    when calculate_hand_total(session[:dealer_hand]) == BLACKJACK
-      session[:player_turn] = false
+    when dealer_hand_total == BLACKJACK
       session[:player_cash] -= session[:player_bet]
       @error = "<strong>Dealer hits Blackjack</strong> You lose."
       if session[:player_cash] == 0
@@ -191,6 +190,7 @@ get '/blackjack' do
         @error = "<strong>You're Broke</strong>. Game Over!"
       end
     end
+    session[:player_turn] = false
     erb :game, layout: false
   else
     redirect '/busted'
@@ -198,22 +198,20 @@ get '/blackjack' do
 end
 
 get '/busted' do
-  if calculate_hand_total(session[:player_hand]) > BLACKJACK ||
-    calculate_hand_total(session[:dealer_hand]) > BLACKJACK
+  if player_hand_total > BLACKJACK || dealer_hand_total > BLACKJACK
     case
-    when calculate_hand_total(session[:player_hand]) > BLACKJACK
-      session[:player_turn] = false
+    when player_hand_total > BLACKJACK
       session[:player_cash] -= session[:player_bet]
       @error = "<strong>You busted!</strong> Dealer wins"
       if session[:player_cash] == 0
         @game_over = true
         @error = "<strong>You're Broke</strong>. Game Over!"
       end
-    when calculate_hand_total(session[:dealer_hand]) > BLACKJACK
-      session[:player_turn] = false
+    when dealer_hand_total > BLACKJACK
       session[:player_cash] += session[:player_bet]
       @success = "<strong>Dealer Busts</strong> You win!"
     end
+    session[:player_turn] = false
     erb :game, layout: false
   else
     redirect '/hand/over'
@@ -223,20 +221,17 @@ end
 get '/hand/over' do
   if session[:player_turn] == false
     case
-    when calculate_hand_total(session[:player_hand]) >
-      calculate_hand_total(session[:dealer_hand])
+    when player_total_hand > dealer_total_hand
       @success = "<strong>You win</strong> this hand!"
       session[:player_cash] += session[:player_bet]
-    when calculate_hand_total(session[:player_hand]) <
-      calculate_hand_total(session[:dealer_hand])
+    when player_total_hand < dealer_total_hand
       session[:player_cash] -= session[:player_bet]
       @error = "<strong>Dealer wins</strong> this hand."
       if session[:player_cash] == 0
         @game_over = true
         @error = "<strong>You're Broke</strong>. Game Over!"
       end
-    when calculate_hand_total(session[:player_hand]) ==
-      calculate_hand_total(session[:dealer_hand])
+    when player_total_hand == dealer_total_hand
       @warning = "<strong>It's a Push</strong> You and the Dealer have the same score."
     end
     erb :game, layout: false
@@ -256,7 +251,7 @@ get '/player/stay' do
 end
 
 get '/dealer/hit' do
-  if calculate_hand_total(session[:dealer_hand]) < DEALER_STAY
+  if deal_hand_total < DEALER_STAY
     deal(session[:dealer_hand])
     redirect '/dealer/hit'
   else
