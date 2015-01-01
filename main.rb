@@ -7,6 +7,7 @@ use Rack::Session::Cookie, :key => 'rack.session',
 
 BLACKJACK = 21
 DEALER_STAY = 17
+STARTING_CASH = 500
 
 helpers do
   def new_deck
@@ -208,7 +209,7 @@ get '/new_game' do
   if session[:player_name]
     session[:player_turn] = true
     session[:player_hand] = []
-    session[:player_cash] = 500
+    session[:player_cash] = STARTING_CASH
     session[:player_bet] = ''
     session[:dealer_hand] = []
 
