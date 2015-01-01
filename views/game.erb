@@ -20,11 +20,14 @@
     <%if @error %>
       <div class='alert alert-error'><%= @error %></div>
     <% end %>
-    <%if @success %>
-      <div class='alert alert-success'><%= @success %></div>
+    <%if @lose %>
+      <div class='alert alert-error'><%= @lose %></div>
     <% end %>
-    <%if @warning %>
-      <div class='alert alert-info'><%= @warning %></div>
+    <%if @win %>
+      <div class='alert alert-success'><%= @win %></div>
+    <% end %>
+    <%if @push %>
+      <div class='alert alert-info'><%= @push %></div>
     <% end %>
 
     <% if session[:player_turn] %>
@@ -68,7 +71,7 @@
 
         </span>
       
-      <% else %>
+      <% elsif session[:player_turn] == false && session[:player_cash] != 0 %>
         
         <span class='pad20px'>
 

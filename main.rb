@@ -81,16 +81,16 @@ helpers do
     if player_hand_total == BLACKJACK || dealer_hand_total == BLACKJACK
       case
       when player_hand_total == BLACKJACK && dealer_hand_total == BLACKJACK
-        @warning = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
+        @push = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
       when player_hand_total == BLACKJACK
         session[:player_cash] += session[:player_bet]
-        @success = "<strong>Blackjack!</strong> You win!"
+        @win = "<strong>Blackjack!</strong> You win!"
       when dealer_hand_total == BLACKJACK
         session[:player_cash] -= session[:player_bet]
-        @error = "<strong>Dealer hits Blackjack</strong> You lose."
+        @lose = "<strong>Dealer hits Blackjack</strong> You lose."
         if session[:player_cash] == 0
           @game_over = true
-          @error = "<strong>You're Broke</strong>. Game Over!"
+          @lose = "<strong>You're Broke</strong>. Game Over!"
         end
       end
       session[:player_turn] = false
@@ -177,16 +177,16 @@ get '/blackjack' do
   if player_hand_total == BLACKJACK || dealer_hand_total == BLACKJACK
     case
     when player_hand_total == BLACKJACK && dealer_hand_total == BLACKJACK
-      @warning = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
+      @push = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
     when player_hand_total == BLACKJACK
       session[:player_cash] += session[:player_bet]
-      @success = "<strong>Blackjack!</strong> You win!"
+      @win = "<strong>Blackjack!</strong> You win!"
     when dealer_hand_total == BLACKJACK
       session[:player_cash] -= session[:player_bet]
-      @error = "<strong>Dealer hits Blackjack</strong> You lose."
+      @lose = "<strong>Dealer hits Blackjack</strong> You lose."
       if session[:player_cash] == 0
         @game_over = true
-        @error = "<strong>You're Broke</strong>. Game Over!"
+        @lose = "<strong>You're Broke</strong>. Game Over!"
       end
     end
     session[:player_turn] = false
@@ -201,14 +201,14 @@ get '/busted' do
     case
     when player_hand_total > BLACKJACK
       session[:player_cash] -= session[:player_bet]
-      @error = "<strong>You busted!</strong> Dealer wins"
+      @lose = "<strong>You busted!</strong> Dealer wins"
       if session[:player_cash] == 0
         @game_over = true
-        @error = "<strong>You're Broke</strong>. Game Over!"
+        @lose = "<strong>You're Broke</strong>. Game Over!"
       end
     when dealer_hand_total > BLACKJACK
       session[:player_cash] += session[:player_bet]
-      @success = "<strong>Dealer Busts</strong> You win!"
+      @win = "<strong>Dealer Busts</strong> You win!"
     end
     session[:player_turn] = false
     erb :game, layout: false
@@ -221,17 +221,17 @@ get '/hand/over' do
   if session[:player_turn] == false
     case
     when player_hand_total > dealer_hand_total
-      @success = "<strong>You win</strong> this hand!"
+      @win = "<strong>You win</strong> this hand!"
       session[:player_cash] += session[:player_bet]
     when player_hand_total < dealer_hand_total
       session[:player_cash] -= session[:player_bet]
-      @error = "<strong>Dealer wins</strong> this hand."
+      @lose = "<strong>Dealer wins</strong> this hand."
       if session[:player_cash] == 0
         @game_over = true
-        @error = "<strong>You're Broke</strong>. Game Over!"
+        @lose = "<strong>You're Broke</strong>. Game Over!"
       end
     when player_hand_total == dealer_hand_total
-      @warning = "<strong>It's a Push</strong> You and the Dealer have the same score."
+      @push = "<strong>It's a Push</strong> You and the Dealer have the same score."
     end
     erb :game, layout: false
   else
