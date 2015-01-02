@@ -18,6 +18,36 @@ helpers do
     session[:deck].shuffle!
   end
 
+  def new_game
+    session[:player_turn] = true
+    session[:player_hand] = []
+    session[:player_cash] = STARTING_CASH
+    session[:player_bet] = ''
+    session[:dealer_hand] = []
+
+    new_deck
+
+    2.times do
+      deal(session[:player_hand])
+      deal(session[:dealer_hand])
+    end
+
+    redirect '/bet'
+  end
+
+  def new_hand
+    session[:player_turn] = true
+    session[:player_hand] = []
+    session[:dealer_hand] = []
+
+    2.times do
+      deal(session[:player_hand])
+      deal(session[:dealer_hand])
+    end
+
+    redirect '/bet'
+  end
+
   def generate_card_image_url(card)
     card_image_name = case card[1]
                       when 'H'
@@ -223,20 +253,7 @@ end
 
 get '/new_game' do
   if session[:player_name]
-    session[:player_turn] = true
-    session[:player_hand] = []
-    session[:player_cash] = STARTING_CASH
-    session[:player_bet] = ''
-    session[:dealer_hand] = []
-
-    new_deck
-
-    2.times do
-      deal(session[:player_hand])
-      deal(session[:dealer_hand])
-    end
-
-    redirect '/bet'
+    new_game
   else
     redirect '/name'
   end
@@ -265,16 +282,7 @@ post '/bet' do
 end
 
 post '/new_hand' do
-  session[:player_turn] = true
-  session[:player_hand] = []
-  session[:dealer_hand] = []
-
-  2.times do
-    deal(session[:player_hand])
-    deal(session[:dealer_hand])
-  end
-
-  redirect '/bet'
+  new_hand
 end
 
 get '/blackjack' do
