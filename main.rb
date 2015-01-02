@@ -1,5 +1,5 @@
 require 'sinatra'
-require "sinatra/reloader" if development?
+require 'sinatra/reloader' if development?
 
 use Rack::Session::Cookie, :key => 'rack.session',
                            :path => '/',
@@ -66,8 +66,24 @@ helpers do
     calculate_hand_total(session[:dealer_hand])
   end
 
+  def player_has_blackjack?
+    player_hand_total == BLACKJACK
+  end
+
+  def dealer_has_blackjack?
+    dealer_hand_total == BLACKJACK
+  end
+
+  def player_has_busted?
+    player_hand_total > BLACKJACK
+  end
+
+  def dealer_has_busted?
+    dealer_hand_total > BLACKJACK
+  end
+
   def random_suit
-    suits = ["&clubs;", "&diams;", "&hearts;", "&spades;"]
+    suits = ['&clubs;', '&diams;', '&hearts;', '&spades;']
     random_suit = suits.sample
     random_suit
   end
@@ -79,17 +95,17 @@ helpers do
   end
 
   def initial_blackjack?
-    if player_hand_total == BLACKJACK || dealer_hand_total == BLACKJACK
+    if player_has_blackjack? || dealer_has_blackjack?
 
       case
-      when player_hand_total == BLACKJACK && dealer_hand_total == BLACKJACK
+      when player_has_blackjack? && dealer_has_blackjack?
         @push = "<strong>It's a Push!</strong> You and the Dealer both have Blackjack"
 
-      when player_hand_total == BLACKJACK
+      when player_has_blackjack?
         session[:player_cash] += session[:player_bet]
         @win = "<strong>Blackjack!</strong> You win!"
 
-      when dealer_hand_total == BLACKJACK
+      when dealer_has_blackjack?
         session[:player_cash] -= session[:player_bet]
         @lose = "<strong>Dealer hits Blackjack</strong> You lose."
 
@@ -104,14 +120,14 @@ helpers do
   end
 
   def has_blackjack?
-    if player_hand_total == BLACKJACK || dealer_hand_total == BLACKJACK
+    if player_has_blackjack? || dealer_has_blackjack?
 
       case
-      when player_hand_total == BLACKJACK
+      when player_has_blackjack?
         session[:player_cash] += session[:player_bet]
         @win = "<strong>Blackjack!</strong> You win!"
 
-      when dealer_hand_total == BLACKJACK
+      when dealer_has_blackjack?
         session[:player_cash] -= session[:player_bet]
         @lose = "<strong>Dealer hits Blackjack</strong> You lose."
 
@@ -130,10 +146,10 @@ helpers do
   end
 
   def is_busted?
-    if player_hand_total > BLACKJACK || dealer_hand_total > BLACKJACK
+    if player_has_busted? || dealer_has_busted?
 
       case
-      when player_hand_total > BLACKJACK
+      when player_has_busted?
         session[:player_cash] -= session[:player_bet]
         @lose = "<strong>You busted!</strong> Dealer wins"
 
@@ -142,7 +158,7 @@ helpers do
           @lose = "<strong>You're Broke</strong>. Game Over!"
         end
 
-      when dealer_hand_total > BLACKJACK
+      when dealer_has_busted?
         session[:player_cash] += session[:player_bet]
         @win = "<strong>Dealer Busts</strong> You win!"
       end
